@@ -239,7 +239,7 @@ ERROR_T BTreeIndex::LookupOrUpdateInternal(const SIZE_T &node,
     	  return b.GetVal(offset,value);
     	} else {
     	  // BTREE_OP_UPDATE
-    	  // WRITE ME
+    	  // WRITE ME - Done
           rc = b.SetVal(offset, value);
           if (rc) { return rc; }
 
@@ -361,17 +361,106 @@ ERROR_T BTreeIndex::Lookup(const KEY_T &key, VALUE_T &value)
 
 ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
 {
-  // WRITE ME
+  // WRITE ME - Done
+
+  KEY_T tempkey = key;
+  VALUE_T tempvalue = value;
+  ERROR_T rc;
+
+  bool more = true;
+  BTreeNode b;
+  list<SIZE_T> path;
+
+  rc = InsertLookup(path, superblock.info.rootnode, tempkey, tempvalue);
+  if (rc != ERROR_NOERROR) { return rc; }
+
+  while (!path.empty() && more)
+  {
+    rc = b.Unserialize(buffercache, path.front());
+    if (rc != ERROR_NOERROR) { return rc; }
+
+    rc = InsertNode(b, more, tempkey, tempvalue);
+    if (rc != ERROR_NOERROR) { return rc; }
+
+    rc = b.Serialize(buffercache, path.front());
+    if (rc != ERROR_NOERROR) { return rc; }
+
+    path.pop_front();
+  }
+
+  return ERROR_NOERROR;
+}
+
+ERROR_T BTreeIndex::InsertLookup(list<SIZE_T> &path, SIZE_T &node, KEY_T &key, VALUE_T &value)
+{
+  BTreeNode b;
+  ERROR_T rc;
+  SIZE_T offset;
+  SIZE_T ptr;
+  KEY_T testkey;
+
+  path.push_front(node);
+
+  rc = b.Unserialize(buffercache, node);
+  if (rc != ERROR_NOERROR) {
+    return rc;
+  }
+
+  switch(b.info.nodetype)
+  {
+    case BTREE_ROOT_NODE:
+    case BTREE_INTERIOR_NODE:
+
+      for (offset=0;offset<b.info.numkeys;offset++) {
+        rc=b.GetKey(offset,testkey);
+        if (rc) {  return rc; }
+        if (key<testkey || key==testkey) {
+      	  rc=b.GetPtr(offset,ptr);
+    	    if (rc) { return rc; }
+    	    return InsertLookup(path, ptr, key, value);
+        }
+      }
+
+      // if we got here, we need to go to the next pointer, if it exists
+      if (b.info.numkeys>0) {
+        rc=b.GetPtr(b.info.numkeys,ptr);
+        if (rc) { return rc; }
+        return InsertLookup(path, ptr, key, value);
+      } else {
+        // There are no keys at all on this node, so nowhere to go
+        return ERROR_NONEXISTENT;
+      }
+      break;
+    case BTREE_LEAF_NODE:
+
+      return ERROR_NOERROR;
+  }
+
+  return ERROR_INSANE;
+
+}
+
+ERROR_T BTreeIndex::InsertNode(BTreeNode &node, bool &more, KEY_T &key, VALUE_T &value)
+{
+  return ERROR_UNIMPL;
+}
+
+ERROR_T BTreeIndex::InsertFull(BTreeNode &node, KEY_T &key, VALUE_T &value)
+{
+  return ERROR_UNIMPL;
+}
+
+ERROR_T BTreeIndex::InsertNonFull(BTreeNode &node, KEY_T &key, VALUE_T &value)
+{
   return ERROR_UNIMPL;
 }
 
 ERROR_T BTreeIndex::Update(const KEY_T &key, const VALUE_T &value)
 {
-  // WRITE ME
+  // WRITE ME - Done
   VALUE_T newValue = value;
   return LookupOrUpdateInternal(superblock.info.rootnode, BTREE_OP_UPDATE, key, newValue);
 }
-
 
 ERROR_T BTreeIndex::Delete(const KEY_T &key)
 {
@@ -380,7 +469,6 @@ ERROR_T BTreeIndex::Delete(const KEY_T &key)
   //
   return ERROR_UNIMPL;
 }
-
 
 //
 //
@@ -471,7 +559,7 @@ ERROR_T BTreeIndex::SanityCheck() const
 
 ostream & BTreeIndex::Print(ostream &os) const
 {
-  // WRITE ME
+  // WRITE ME - Done
   ERROR_T rc;
   rc = Display(os, BTREE_DEPTH_DOT);
   return os;

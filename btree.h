@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <list>
 
 #include "global.h"
 #include "block.h"
@@ -58,7 +59,10 @@ class BTreeIndex {
 				      const KEY_T &key,
 				      VALUE_T &val);
 
-  ERROR_T      InsertInternal(const KEY_T &key, const VALUE_T &value);         
+  ERROR_T      InsertLookup(list<SIZE_T> &path, SIZE_T &node, KEY_T &key, VALUE_T &value);
+  ERROR_T      InsertNode(BTreeNode &node, bool &more, KEY_T &key, VALUE_T &value);
+  ERROR_T      InsertFull(BTreeNode &node, KEY_T &key, VALUE_T &value);
+  ERROR_T      InsertNonFull(BTreeNode &node, KEY_T &key, VALUE_T &value);
 
   ERROR_T      DisplayInternal(const SIZE_T &node,
 			       ostream &o,
