@@ -1,0 +1,11 @@
+INIT 64 64
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+LOOKUP vx8rt0k8ti9wxeefhh1dqqxwns8nn7etcsej92d2g44727vjq3jh6i2qq055rnef  # should fail
+UPDATE jm2b1cid9qb54gisxnf9w9pmwlo7wm53rs8idzd48mhcbkngpgm477omfhpjlxwo xnlybfcnb826edn8gcq2bdw9dxns7yrjzyqtphqv4h24u27dd5gqq5zb18zrbb1t  # should fail
+LOOKUP 8kiyx8gzoi8c2djwu5r0s6e22agpcyks8ox247h0ka1afv61erjwqsakl843e29d  # should fail
+LOOKUP sfslubgui09x537hw0c2ealemyyq241612mmk0peh6pw2rpivyn8dn4lq5p3dep6  # should fail
+UPDATE znrziju5tghciy2siktpdi78dkdnwd9onh9eg7f1qv120vf6b79r0o8wwpqer0ge laq93t0w41xyqbb4xaabme9c2tvsmlrv8f2e0954zc0vptelapix8hqfuz3p419r  # should fail
+UPDATE 46p465qqg9foqvpbd39opgq74iykwsenj8n76m1q8xrd7exhy2zafnfo8ln7ltgt 476uad944xdgyjln9yw8hp69rhmxib47atwfcyc0s5rjkxniwf1elkmb48902gt2  # should fail
+DEINIT

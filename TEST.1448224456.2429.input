@@ -1,0 +1,11 @@
+INIT 4 4
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+LOOKUP vx8r  # should fail
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE 9wxe efhh  # should fail
+INSERT qqxw ns8n  # should succeed
+LOOKUP qqxw  # should succeed and return ns8n
+DEINIT

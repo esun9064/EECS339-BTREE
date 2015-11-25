@@ -1,0 +1,11 @@
+INIT 2 64
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+LOOKUP vx  # should fail
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE 9w xeefhh1dqqxwns8nn7etcsej92d2g44727vjq3jh6i2qq055rneffjm2b1cid9qb  # should fail
+UPDATE is xnf9w9pmwlo7wm53rs8idzd48mhcbkngpgm477omfhpjlxwoxnlybfcnb826edn8  # should fail
+DEINIT

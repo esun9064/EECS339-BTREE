@@ -1,0 +1,11 @@
+INIT 2 1
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+LOOKUP vx  # should fail
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE 9w x  # should fail
+INSERT ef h  # should succeed
+DEINIT

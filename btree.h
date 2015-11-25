@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
+#include <set>
 
 #include "global.h"
 #include "block.h"
@@ -43,30 +44,28 @@ enum BTreeOp {BTREE_OP_INSERT, BTREE_OP_DELETE, BTREE_OP_UPDATE,BTREE_OP_LOOKUP}
 enum BTreeDisplayType {BTREE_DEPTH, BTREE_DEPTH_DOT, BTREE_SORTED_KEYVAL};
 
 class BTreeIndex {
- private:
+private:
   BufferCache *buffercache;
   SIZE_T       superblock_index;
   BTreeNode    superblock;
+  unsigned int maxNumKeys;
+  bool initBlock;
 
- protected:
+protected:
 
   ERROR_T      AllocateNode(SIZE_T &node);
 
   ERROR_T      DeallocateNode(const SIZE_T &node);
 
   ERROR_T      LookupOrUpdateInternal(const SIZE_T &Node,
-				      const BTreeOp op,
-				      const KEY_T &key,
-				      VALUE_T &val);
+    const BTreeOp op,
+    const KEY_T &key,
+    VALUE_T &val);
 
-  ERROR_T      InsertLookup(list<SIZE_T> &path, SIZE_T &node, KEY_T &key, VALUE_T &value);
-  ERROR_T      InsertNode(BTreeNode &node, bool &more, KEY_T &key, VALUE_T &value);
-  ERROR_T      InsertFull(BTreeNode &node, KEY_T &key, VALUE_T &value);
-  ERROR_T      InsertNonFull(BTreeNode &node, KEY_T &key, VALUE_T &value);
 
   ERROR_T      DisplayInternal(const SIZE_T &node,
-			       ostream &o,
-			       const BTreeDisplayType display_type=BTREE_DEPTH) const;
+    ostream &o,
+    const BTreeDisplayType display_type=BTREE_DEPTH) const;
 public:
   //
   // keysize and valueszie should be stored in the
@@ -79,8 +78,8 @@ public:
   // will be zero and will be read when Attach(initialblock,false) is
   // invoked
   BTreeIndex(SIZE_T keysize,
-	     SIZE_T valuesize,
-	     BufferCache *cache,
+    SIZE_T valuesize,
+    BufferCache *cache,
 	     bool unique=true);   // true if a  key maps to a single value
 
 
@@ -143,6 +142,18 @@ public:
   ERROR_T Display(ostream &o, BTreeDisplayType display_type=BTREE_DEPTH) const;
 
   ostream & Print(ostream &os) const;
+
+  // Find the path to the node where the passed in key should go,
+  // return path as a stack of pointers.
+  ERROR_T LookupLeaf(const SIZE_T &node, const KEY_T &key, vector<SIZE_T> &path);
+
+  // Takes a path of pointers and a node at the bottom of that path.
+  // Will split the node and recursively walk up the parent path
+  // guaranteeing the sanity of each parent.
+  ERROR_T Rebalance(const SIZE_T &node, vector<SIZE_T> path);
+
+  //Walks the tree starting at root node. For our sanity check.
+  ERROR_T SanityHelper(const SIZE_T &node) const;
 
 };
 

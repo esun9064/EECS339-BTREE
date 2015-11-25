@@ -1,0 +1,5 @@
+INIT 4 4
+INSERT q4mu ag91  # should succeed
+LOOKUP q4mu  # should succeed and return ag91
+LOOKUP ec8f  # should fail
+DEINIT

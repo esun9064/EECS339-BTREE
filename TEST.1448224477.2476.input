@@ -1,0 +1,11 @@
+INIT 32 64
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+LOOKUP vx8rt0k8ti9wxeefhh1dqqxwns8nn7et  # should fail
+INSERT sej92d2g44727vjq3jh6i2qq055rneff jm2b1cid9qb54gisxnf9w9pmwlo7wm53rs8idzd48mhcbkngpgm477omfhpjlxwo  # should succeed
+LOOKUP nlybfcnb826edn8gcq2bdw9dxns7yrjz  # should fail
+LOOKUP qtphqv4h24u27dd5gqq5zb18zrbb1t6m  # should fail
+LOOKUP 8kiyx8gzoi8c2djwu5r0s6e22agpcyks  # should fail
+UPDATE sej92d2g44727vjq3jh6i2qq055rneff x247h0ka1afv61erjwqsakl843e29d0ysfslubgui09x537hw0c2ealemyyq2416  # should succeed
+DEINIT
