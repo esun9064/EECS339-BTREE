@@ -1,0 +1,17 @@
+INIT 4 12
+UPDATE 0d5u 2yn50qm0jo14  # should fail
+LOOKUP zcqd  # should fail
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE jj7p 2ec7afnft5pj  # should fail
+INSERT 1zh1 ox7sypvuwqwe  # should succeed
+UPDATE 1zh1 ql8mod89u5f6  # should succeed
+LOOKUP c882  # should fail
+INSERT 1zh1 k8upn7b10vpx  # should fail
+INSERT 1zh1 b1zekcyn0hff  # should fail
+INSERT 1zh1 lsph0avr71ea  # should fail
+DISPLAY  # should always succeed
+INSERT 1zh1 d42ud306s58u  # should fail
+DISPLAY  # should always succeed
+LOOKUP 1zh1  # should succeed and return ql8mod89u5f6
+DEINIT

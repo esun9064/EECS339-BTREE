@@ -534,8 +534,8 @@ ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
         // re serialize after access and write
         leafNode.Serialize(buffercache, leafPtr);
 
-        // check if node length is over 2/3, call rebalance if so
-        if ((int) leafNode.info.numkeys > (int) (2 * maxNumKeys/3)) {
+        // check if node length is over maxNumKeys, call rebalance if so
+        if ((int) leafNode.info.numkeys > (int) (maxNumKeys)) {
           SIZE_T parentPtr = path.back();
           path.pop_back();
           rc = Rebalance(parentPtr, path);
@@ -857,7 +857,7 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
 
     newParentNode.Serialize(buffercache, parentPtr);
 
-    if ((int) newParentNode.info.numkeys > (int) (2*maxNumKeys/3))
+    if ((int) newParentNode.info.numkeys > (int) (maxNumKeys))
     {
       rc = Rebalance(parentPtr, path);
       if (rc) { return rc; }
@@ -988,9 +988,9 @@ ERROR_T BTreeIndex::SanityHelper(const SIZE_T &node) const
   if (rc != ERROR_NOERROR) { return rc; }
 
   // check nodes have correct lengths
-  if (b.info.numkeys > (unsigned) (2 * maxNumKeys / 3))
+  if (b.info.numkeys > (unsigned) (maxNumKeys))
   {
-    cout << "Current Node: " << b.info.nodetype << " has " << b.info.numkeys << " keys which is greater than 2/3 the max: " << maxNumKeys << endl;
+    cout << "Current Node: " << b.info.nodetype << " has " << b.info.numkeys << " keys which is greater than the max: " << maxNumKeys << endl;
   }
 
   switch (b.info.nodetype)

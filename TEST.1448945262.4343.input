@@ -1,0 +1,17 @@
+INIT 2 4
+UPDATE 0d 5u2y  # should fail
+DISPLAY  # should always succeed
+UPDATE o1 4uzc  # should fail
+DISPLAY  # should always succeed
+INSERT to u85f  # should succeed
+UPDATE j7 p2ec  # should fail
+UPDATE to fnft  # should succeed
+UPDATE to jl1d  # should succeed
+INSERT to h1ox  # should fail
+UPDATE to ypvu  # should succeed
+LOOKUP qw  # should fail
+INSERT 8f ql8m  # should succeed
+LOOKUP to  # should succeed and return ypvu
+UPDATE 8f u5f6  # should succeed
+LOOKUP c8  # should fail
+DEINIT

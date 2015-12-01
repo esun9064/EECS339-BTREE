@@ -1,0 +1,17 @@
+INIT 12 12
+UPDATE 0d5u2yn50qm0 jo14uzcqdtou  # should fail
+UPDATE jj7p2ec7afnf t5pjl1d1zh1o  # should fail
+LOOKUP 7sypvuwqwe8f  # should fail
+DISPLAY  # should always succeed
+INSERT 89u5f6xc8822 uk8upn7b10vp  # should succeed
+LOOKUP 0cb1zekcyn0h  # should fail
+UPDATE f3tlsph0avr7 1ear44d42ud3  # should fail
+INSERT 89u5f6xc8822 s58urpx5vi9f  # should fail
+LOOKUP z9xx4y8l2f5v  # should fail
+LOOKUP 89u5f6xc8822  # should succeed and return uk8upn7b10vp
+UPDATE 89u5f6xc8822 i440er2rupbl  # should succeed
+LOOKUP 89u5f6xc8822  # should succeed and return i440er2rupbl
+INSERT yvi085ctnazb a1w7toohlhvn  # should succeed
+UPDATE q2gzrfwie5d1 nucnw2p3t0rj  # should fail
+DISPLAY  # should always succeed
+DEINIT

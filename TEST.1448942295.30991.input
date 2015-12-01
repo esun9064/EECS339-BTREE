@@ -1,0 +1,13 @@
+INIT 8 4
+UPDATE 0d5u2yn5 0qm0  # should fail
+UPDATE o14uzcqd tou8  # should fail
+UPDATE jj7p2ec7 afnf  # should fail
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE l1d1zh1o x7sy  # should fail
+DISPLAY  # should always succeed
+LOOKUP uwqwe8fq  # should fail
+INSERT 89u5f6xc 8822  # should succeed
+DISPLAY  # should always succeed
+UPDATE 8upn7b10 vpx0  # should fail
+DEINIT

@@ -1,0 +1,17 @@
+INIT 2 12
+UPDATE 0d 5u2yn50qm0jo  # should fail
+LOOKUP zc  # should fail
+DISPLAY  # should always succeed
+INSERT to u85fjj7p2ec7  # should succeed
+INSERT fn ft5pjl1d1zh1  # should succeed
+LOOKUP fn  # should succeed and return ft5pjl1d1zh1
+UPDATE fn ypvuwqwe8fql  # should succeed
+UPDATE to od89u5f6xc88  # should succeed
+INSERT fn uk8upn7b10vp  # should fail
+LOOKUP 0c  # should fail
+INSERT 1z ekcyn0hff3tl  # should succeed
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE 0a vr71ear44d42  # should fail
+LOOKUP d3  # should fail
+DEINIT
