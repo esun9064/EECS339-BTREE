@@ -377,24 +377,25 @@ ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
   VALUE_T val;
   ERROR_T ret;
 
-  cout << "Starting Insert Function" << endl;
+  //cout << "Starting Insert Function" << endl;
 
   // lookup and attempt update key
-  ret = LookupOrUpdateInternal(superblock.info.rootnode, BTREE_OP_UPDATE, key, val);
+  ret = LookupOrUpdateInternal(superblock.info.rootnode, BTREE_OP_LOOKUP, key, val);
 
   switch(ret)
   {
     // key already exists, so do not do anything but update value
     case ERROR_NOERROR:
-      cout << "Key aleady in tree, value updated successfully" << endl;
-      return ERROR_NOERROR;
+      //cout << "Key aleady in tree, value updated successfully" << endl;
+      return ERROR_INSANE;
+      break;
     // if key doesn't exist, we will try to insert
     case ERROR_NONEXISTENT:
     {
       // traverse to find the leaf
       // keep stack of pointers to track path down the node
       // where the key should go
-      cout << "New key, begin insert process" << endl;
+      //cout << "New key, begin insert process" << endl;
       ERROR_T rc;
 
       BTreeNode leafNode;
@@ -417,7 +418,7 @@ ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
       // if no keys exist yet
       if (!initBlock)
       {
-        cout << "No keys in tree yet, adding to root" << endl;
+        //cout << "No keys in tree yet, adding to root" << endl;
         initBlock = true;
 
         // allocate new block and set the values to the first key position
@@ -455,15 +456,15 @@ ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
         vector<SIZE_T> path;
         path.push_back(superblock.info.rootnode);
 
-        cout << "Starting lookupleaf" << endl;
+        //cout << "Starting lookupleaf" << endl;
         LookupLeaf(superblock.info.rootnode, key, path);
         // get the node from the last pointer (which will be the leaf node where we
         // we need to put our key) and remove it from stack
-        cout << "Finished lookupleaf" << endl;
+        //cout << "Finished lookupleaf" << endl;
         leafPtr = path.back();
         path.pop_back();
 
-        cout << "LeafPtr: " << leafPtr << endl;
+        //cout << "LeafPtr: " << leafPtr << endl;
 
         KEY_T testKey;
         KEY_T oldKey;
@@ -538,13 +539,11 @@ ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
           SIZE_T parentPtr = path.back();
           path.pop_back();
           rc = Rebalance(parentPtr, path);
-          if (rc) { return rc; }
+          // if (rc) { return rc; }
         }
       }
+      break;
     }
-    default:
-      cout << "Error Occurred. Please perform sanity check" << endl;
-      return ERROR_INSANE;
   }
 
   return ERROR_NOERROR;
@@ -577,7 +576,7 @@ ERROR_T BTreeIndex::LookupLeaf(const SIZE_T &node, const KEY_T &key, vector<SIZE
           if (rc) { return rc; }
 
           path.push_back(ptr);
-          cout << "path now has: " << path[0] << endl;
+          //cout << "path now has: " << path[0] << endl;
           return LookupLeaf(ptr, key, path);
         }
       }
@@ -623,7 +622,7 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
   rc = b.Unserialize(buffercache, node);
   if (rc) { return rc; }
 
-  cout << "Rebalancing" << endl;
+  //cout << "Rebalancing" << endl;
 
   // allocate two new nodes
   // fill them from the place you're splitting
@@ -668,7 +667,7 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
     // build left leaf node, include splitting key
     for (offset = 0; (int) offset < midpoint; offset++)
     {
-      cout << "Offset for building new left leaf node: " << offset << endl;
+      //cout << "Offset for building new left leaf node: " << offset << endl;
       leftNode.info.numkeys++;
 
       // get old node values
@@ -688,8 +687,8 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
     {
       rightNode.info.numkeys++;
 
-      cout << "Offset for building new right leaf node: " << pos << endl;
-      cout << "Offset for total block: " << offset << endl;
+      //cout << "Offset for building new right leaf node: " << pos << endl;
+      //cout << "Offset for total block: " << offset << endl;
       // get old node values
       rc = b.GetKey(offset, keyPos);
       if (rc) { return rc; }
@@ -709,7 +708,7 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
     // build left interior node, include splitting key
     for (offset = 0; (int) offset < midpoint; offset++)
     {
-      cout << "offset for building new left interior node: " << offset << endl;
+      //cout << "offset for building new left interior node: " << offset << endl;
       leftNode.info.numkeys++;
 
       // get old node values
@@ -729,8 +728,8 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
     {
       rightNode.info.numkeys++;
 
-      cout << "offset for building new right interior node: " << pos << endl;
-      cout << "offset for total block: " << offset << endl;
+      //cout << "offset for building new right interior node: " << pos << endl;
+      //cout << "offset for total block: " << offset << endl;
 
       // get old node values
       rc = b.GetKey(offset, keyPos);
@@ -764,12 +763,12 @@ ERROR_T BTreeIndex::Rebalance(const SIZE_T &node, vector<SIZE_T> path)
   rc = b.GetKey(midpoint - 1, splitKey);
   if (rc) { return rc;}
 
-  cout << "Node type: " << b.info.nodetype << endl;
+  //cout << "Node type: " << b.info.nodetype << endl;
 
   // if we have reached the root we need to make a new root
   if (b.info.nodetype == BTREE_ROOT_NODE)
   {
-    cout << "Building new root" << endl;
+    //cout << "Building new root" << endl;
     SIZE_T newRootPtr;
     BTreeNode newRootNode;
     AllocateNode(newRootPtr);
@@ -1004,6 +1003,7 @@ ERROR_T BTreeIndex::SanityHelper(const SIZE_T &node) const
         rc = b.GetKey(offset, testKey);
         if (rc) { return rc; }
 
+        // check that keys are in proper order
         if (offset + 1 < b.info.numkeys - 1)
         {
           rc = b.GetKey(offset + 1, tempKey);
@@ -1019,7 +1019,7 @@ ERROR_T BTreeIndex::SanityHelper(const SIZE_T &node) const
         return SanityHelper(tempPtr);
       }
 
-      // go to next pointer
+      // no problems so go to next pointer
       if (b.info.numkeys > 0)
       {
         rc = b.GetPtr(b.info.numkeys, tempPtr);
@@ -1052,7 +1052,7 @@ ERROR_T BTreeIndex::SanityHelper(const SIZE_T &node) const
           return rc;
         }
 
-        // keys not in proper order
+        // check if keys are not in order
         if(offset+1<b.info.numkeys){
           rc = b.GetKey(offset+1, tempKey);
           if(tempKey < testKey){

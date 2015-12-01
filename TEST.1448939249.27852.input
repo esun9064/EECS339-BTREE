@@ -1,0 +1,11 @@
+INIT 4 4
+UPDATE 0d5u 2yn5  # should fail
+DISPLAY  # should always succeed
+UPDATE o14u zcqd  # should fail
+DISPLAY  # should always succeed
+DISPLAY  # should always succeed
+UPDATE jj7p 2ec7  # should fail
+INSERT fnft 5pjl  # should succeed
+INSERT fnft 1zh1  # should fail
+LOOKUP fnft  # should succeed and return 5pjl
+DEINIT
